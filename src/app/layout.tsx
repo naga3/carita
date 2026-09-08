@@ -1,3 +1,4 @@
+import { Scene } from "@/components/scene";
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
@@ -23,11 +24,17 @@ export default function RootLayout({
             carita<span>文献から、こころを知る</span>
           </Link>
           <nav aria-label="メインナビゲーション">
+            <Link href="/about/#reading-guide">ことばの手引き</Link>
             <Link href="/sources/">出典を読む</Link>
             <Link href="/about/">このサイトについて</Link>
           </nav>
         </header>
         <main id="main">{children}</main>
+        <div className="footer-landscapes" aria-hidden="true">
+          <Scene name="forest" />
+          <Scene name="learning" />
+          <Scene name="kindness" />
+        </div>
         <footer>
           <Link href="/" className="footer-brand">
             Carita

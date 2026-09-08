@@ -1,4 +1,5 @@
 "use client";
+import { Scene } from "./scene";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { questions } from "@/data/questions";
@@ -51,6 +52,10 @@ function Flow({
   }
   return (
     <div className="narrow page">
+      <div className="question-banner">
+        <Scene name="forest" />
+        <p>ひとつずつ、ふだんを振り返る。</p>
+      </div>
       <p className="eyebrow">OBSERVE & REFLECT</p>
       <div className="question-progress">
         <span>
@@ -70,6 +75,12 @@ function Flow({
         <p className="muted">
           近い記述を一つ選んでください。迷う場合は、判断できないと答えられます。
         </p>
+        <details className="answer-help">
+          <summary>答え方のヒント</summary>
+          <p>
+            理想の振る舞いではなく、実際に近いと感じる記述を選びます。どれも近くないときや、状況で変わって決められないときは「判断できない」で大丈夫です。正解・不正解はありません。
+          </p>
+        </details>
         <fieldset>
           <legend className="sr-only">回答の選択肢</legend>
           {q.answers.map((a) => (

@@ -1,3 +1,4 @@
+import { practiceNotes, glossaryNotes } from "@/data/reading-notes";
 import { describe, expect, it } from "vitest";
 import { questions } from "@/data/questions";
 import { practices } from "@/data/practices";
@@ -84,5 +85,26 @@ describe("決定論的一致数", () => {
     const q = structuredClone(questions[0]);
     q.answers[0].evidence.push(q.answers[0].evidence[0]);
     expect(score({ walking: "0" }, [q]).leaders[0].count).toBe(1);
+  });
+});
+
+describe("参考説明は出典付きの別データ", () => {
+  it("全修行法に一つずつ意訳があり、未知の修行法に割り当てない", () => {
+    expect(practiceNotes.map((n) => n.id).sort()).toEqual(
+      practices.map((p) => p.id).sort(),
+    );
+  });
+  it("用語・意訳・日常例の位置づけと参照が明示される", () => {
+    for (const note of [...practiceNotes, ...glossaryNotes]) {
+      expect(note.evidenceLevel).toBe("modernized");
+      expect(note.sourceIds.length).toBeGreaterThan(0);
+      for (const id of note.sourceIds)
+        expect(sources.some((s) => s.id === id)).toBe(true);
+      if (note.example) expect(note.example.evidenceLevel).toBe("interpretive");
+      expect(note).not.toHaveProperty("answers");
+      expect(note).not.toHaveProperty("strength");
+    }
+    for (const q of questions)
+      expect(q.sourceIds.every((id) => !id.startsWith("reader-"))).toBe(true);
   });
 });

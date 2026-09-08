@@ -1,5 +1,7 @@
+import { readingSources } from "./reading-sources";
 import type { Source } from "@/domain/types";
 export const sources: Source[] = [
+  ...readingSources,
   {
     id: "v74",
     work: "Visuddhimagga（清浄道論）",

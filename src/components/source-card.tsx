@@ -19,6 +19,11 @@ export function SourceCard({
       <span className={`badge ${s.traditionLevel}`}>
         {traditionLabels[s.traditionLevel]} · {s.traditionLevel}
       </span>
+      {s.id.startsWith("reader-") && (
+        <p className="supplement-label">
+          参考説明の用語を確かめる資料 · 気質の割当には使用しません
+        </p>
+      )}
       <h3>{s.work}</h3>
       <p className="source-location">{s.location}</p>
       {s.pali && <blockquote lang="pi">{s.pali}</blockquote>}
@@ -26,7 +31,9 @@ export function SourceCard({
       <div className="source-links">
         {s.externalUrl && (
           <a href={s.externalUrl} target="_blank" rel="noreferrer">
-            原文を参照 ↗
+            {s.id.startsWith("reader-")
+              ? "参照本文（英訳）を読む ↗"
+              : "原文を参照 ↗"}
           </a>
         )}
         {!anchor && (

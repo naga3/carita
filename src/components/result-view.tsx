@@ -1,4 +1,7 @@
 "use client";
+import { Scene, type SceneName } from "./scene";
+import { ReadingAid } from "./reading-note";
+import { practiceNotes } from "@/data/reading-notes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { questions } from "@/data/questions";
@@ -36,6 +39,7 @@ export function ResultView() {
     <div className="result page">
       <p className="eyebrow">YOUR REFLECTION · 今回の回答との照合</p>
       <h1>文献のことばで、振り返る。</h1>
+      <Scene name="forest" className="page-panorama" />
       <section className="result-summary">
         <span className="badge">最も一致が多かった傾向</span>
         {result.leaders.length ? (
@@ -64,6 +68,9 @@ export function ResultView() {
       </section>
       <section className="section">
         <h2>一致件数</h2>
+        <p className="count-example">
+          たとえば「3件」は、今回選んだ回答のうち3つに対応する記述があった、という意味です。人柄の強さや、修行との相性を測る数字ではありません。
+        </p>
         <p className="muted">
           各気質につき最大5件。類似する二気質に対応する回答もあります。割合や適性の確率ではありません。
         </p>
@@ -87,6 +94,13 @@ export function ResultView() {
       </section>
       <section className="section">
         <h2>文献上、対応するとされる修行法</h2>
+        <div className="reference-intro">
+          <strong>昔のことばを、いまのことばで。</strong>
+          <p>
+            各カードの「参考 ·
+            意訳」に、やさしい説明を添えました。身近な例は本サイトの補助説明です。原典の要約と区別してお読みください。
+          </p>
+        </div>
         <p>
           一致が1件以上あるすべての傾向について、伝統文献の対応を示します。個人への実践処方ではありません。
         </p>
@@ -100,6 +114,20 @@ export function ResultView() {
                 .filter((p) => p.traditionLevel === level)
                 .map((p) => (
                   <article className="practice-card" key={p.id}>
+                    <Scene
+                      name={
+                        (
+                          {
+                            "m14-moha": "learning",
+                            "m14-dosa": "kindness",
+                            "m14-saddha": "learning",
+                            "v121-1": "kindness",
+                            "v121-3": "kindness",
+                          } as Record<string, SceneName>
+                        )[p.id] ?? "forest"
+                      }
+                      className="practice-scene"
+                    />
                     <span className={`badge ${level}`}>
                       {traditionLabels[level]} · direct
                     </span>
@@ -112,7 +140,13 @@ export function ResultView() {
                     <p lang="pi" className="pali">
                       {p.namePali}
                     </p>
+                    <p className="original-label">文献の要約</p>
                     <p>{p.description}</p>
+                    {practiceNotes
+                      .filter((note) => note.id === p.id)
+                      .map((note) => (
+                        <ReadingAid key={note.id} note={note} />
+                      ))}
                     {p.sourceIds.map((id) => (
                       <a key={id} href={`#evidence-${id}`}>
                         対応の根拠を読む →

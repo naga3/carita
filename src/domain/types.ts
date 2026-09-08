@@ -32,3 +32,14 @@ export type PracticeRecommendation = {
   evidenceLevel: EvidenceLevel;
 };
 export type Answers = Record<string, string>;
+
+/** Editorial reading aids, deliberately outside the scoring model. */
+export type ReadingNote = {
+  id: string;
+  title: string;
+  explanation: string;
+  evidenceLevel: "modernized";
+  sourceIds: string[];
+  example?: { text: string; evidenceLevel: "interpretive" };
+  boundary?: string;
+};

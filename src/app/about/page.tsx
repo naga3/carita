@@ -1,3 +1,5 @@
+import { Scene } from "@/components/scene";
+import { ReadingGuide } from "@/components/reading-guide";
 import Link from "next/link";
 export const metadata = { title: "このサイトについて" };
 export default function AboutPage() {
@@ -9,6 +11,7 @@ export default function AboutPage() {
         <br />
         観察するために。
       </h1>
+      <Scene name="kindness" className="page-panorama" caption />
       <section className="section">
         <h2>文献とのつながりを第一に</h2>
         <p>
@@ -23,7 +26,12 @@ export default function AboutPage() {
         </p>
       </section>
       <section className="section">
-        <h2>記述と質問の距離を示す</h2>
+        <h2>参考の説明と、文献の記述を分ける</h2>
+        <p>
+          修行法の「参考 ·
+          意訳」は、本サイトによるやさしい説明です。「身近なイメージ」は理解を助けるための現代の例。単に参考と添えて意味を広げるのではなく、文献の要約、意訳、例を区別し、参照先を残しています。これらの参考説明は採点に使いません。
+        </p>
+        <h3>記述と質問の距離を示す</h3>
         <dl className="definitions">
           <dt>direct</dt>
           <dd>
@@ -67,6 +75,13 @@ export default function AboutPage() {
         <p>
           回答をサーバーへ送信しません。実行時の
           LLM、解析ツール、アカウント登録は使用せず、静的データと決定論的な計算だけで照合します。原文への外部リンクは、選ぶと外部サイトを開きます。
+        </p>
+      </section>
+      <ReadingGuide />
+      <section className="section">
+        <h2>風景のイラストについて</h2>
+        <p>
+          タイの森の僧院、スリランカの菩提樹の下、ミャンマーの村をイメージした創作イラストです。AIで制作した挿絵で、実在の場所の写真・歴史的復元・修行の手順図ではありません。それぞれの地域の文化すべてを代表するものでもありません。
         </p>
       </section>
       <Link className="button" href="/questions/">

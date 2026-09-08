@@ -1,3 +1,5 @@
+import { Scene } from "@/components/scene";
+import { ReadingGuide } from "@/components/reading-guide";
 import { sources } from "@/data/sources";
 import { SourceCard } from "@/components/source-card";
 export const metadata = { title: "出典を読む" };
@@ -6,6 +8,7 @@ export default function SourcesPage() {
     <div className="reading page">
       <p className="eyebrow">THE SOURCE LIBRARY</p>
       <h1>出典を読む</h1>
+      <Scene name="learning" className="page-panorama" caption />
       <p className="intro">回答から原文まで、つながりをたどる。</p>
       <p>
         日本語は本サイトによる要約です。canonical
@@ -20,13 +23,13 @@ export default function SourcesPage() {
         <section className="section" id={level} key={level}>
           <h2>
             {level === "canonical"
-              ? "パーリ三蔵 — Mahāniddesa"
+              ? "パーリ三蔵 — Mahāniddesa ほか"
               : "論書 — Visuddhimagga（清浄道論）"}
           </h2>
           <p>
             {level === "canonical"
-              ? "第14章 Tuvaṭakasuttaniddesa の65.6–12を採用。第16章31.6–12の並行箇所も確認しています。"
-              : "第3章の六気質・観察記述・判別の留保・瞑想対象の適性を採用。III の節番号は Ñāṇamoli 訳の区分で、パーリ版の §43・45・47 と併記しています。"}
+              ? "気質と指導の対応には Mahāniddesa 第14章65.6–12を採用し、第16章31.6–12も確認。入出息念経・慈経などは、参考説明の用語を確認するための追加資料です。"
+              : "第3章の六気質・観察記述・判別の留保・瞑想対象の適性を採用。第8・9・11章などは用語解説に参照。III の節番号は Ñāṇamoli 訳の区分で、パーリ版の §43・45・47 と併記しています。"}
           </p>
           {sources
             .filter((s) => s.traditionLevel === level)
@@ -35,6 +38,7 @@ export default function SourcesPage() {
             ))}
         </section>
       ))}
+      <ReadingGuide />
     </div>
   );
 }

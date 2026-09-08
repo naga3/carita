@@ -1,3 +1,5 @@
+import { Scene } from "@/components/scene";
+import { ReadingGuide } from "@/components/reading-guide";
 import Link from "next/link";
 import { caritas } from "@/data/caritas";
 export default function Home() {
@@ -35,16 +37,13 @@ export default function Home() {
             判定根拠をすべて確認できます
           </p>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="orbit orbit-three" />
-          <div className="art-center">
-            carita<small>気質・傾向</small>
-          </div>
-          <span className="art-note">一つの型に、閉じ込めない。</span>
-        </div>
+        <Scene name="forest" className="hero-landscape" priority />
       </section>
+      <div className="scene-gallery">
+        <Scene name="forest" caption />
+        <Scene name="learning" caption />
+        <Scene name="kindness" caption />
+      </div>
       <section className="steps">
         <div>
           <span className="step-num">01</span>
@@ -78,18 +77,22 @@ export default function Home() {
           「痴」は仏教用語であり、知能の評価ではありません。六分類は固定的な人格を表すものではありません。
         </p>
       </section>
-      <section className="editorial">
-        <p className="eyebrow">ROOTED IN SOURCES</p>
-        <h2>
-          「どこに書かれているか」を、
-          <br />
-          いつでも確かめられる。
-        </h2>
-        <p>
-          質問は『清浄道論』第3章から。修行法は Mahāniddesa
-          と『清浄道論』それぞれの記述から。文献自体が述べる判別の限界も、あわせて紹介します。
-        </p>
-        <Link href="/sources/">採用した文献と箇所を見る →</Link>
+      <ReadingGuide />
+      <section className="editorial illustrated-editorial">
+        <Scene name="learning" />{" "}
+        <div className="editorial-copy">
+          <p className="eyebrow">ROOTED IN SOURCES</p>
+          <h2>
+            「どこに書かれているか」を、
+            <br />
+            いつでも確かめられる。
+          </h2>
+          <p>
+            質問は『清浄道論』第3章から。修行法は Mahāniddesa
+            と『清浄道論』それぞれの記述から。文献自体が述べる判別の限界も、あわせて紹介します。
+          </p>
+          <Link href="/sources/">採用した文献と箇所を見る →</Link>
+        </div>
       </section>
     </>
   );

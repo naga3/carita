@@ -153,3 +153,59 @@ test("保存が使えない場合にも回答できる", async ({ page }) => {
     page.getByRole("heading", { name: "貪行・信行", exact: true }),
   ).toBeVisible();
 });
+
+test("参考の意訳・日常例・追加の出典とイラスト", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".hero-landscape img")).toBeVisible();
+  expect(
+    await page
+      .locator(".hero-landscape img")
+      .evaluate(
+        (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
+      ),
+  ).toBe(true);
+  await page.evaluate(() =>
+    localStorage.setItem(
+      "carita:answers:v1",
+      JSON.stringify({
+        version: 1,
+        answers: {
+          walking: "0",
+          work: "0",
+          eating: "0",
+          seeing: "0",
+          "mental-raga": "yes",
+          "mental-dosa": "yes",
+          "mental-moha": "yes",
+          "mental-saddha": "yes",
+          "mental-buddhi": "yes",
+          "mental-vitakka": "yes",
+        },
+      }),
+    ),
+  );
+  await page.goto("/result/");
+  await expect(page.locator(".practice-card .reading-aid")).toHaveCount(11);
+  const breath = page
+    .locator(".practice-card")
+    .filter({ hasText: "いま、吸っている息・吐いている息に気づく" });
+  await expect(breath.locator(".reading-label")).toContainText("参考 · 意訳");
+  await expect(breath.locator(".everyday-example")).toContainText(
+    "本サイトの例",
+  );
+  await breath
+    .getByText("この参考説明の位置づけ・出典", { exact: true })
+    .click();
+  await expect(breath.locator(".reading-references")).toContainText(
+    "採点には使いません",
+  );
+  await noOverflow(page);
+  await breath
+    .getByRole("link", { name: "参照 reader-breath →", exact: true })
+    .click();
+  await expect(page.locator("#reader-breath")).toBeInViewport();
+  await expect(page.locator("#reader-breath")).toContainText(
+    "気質の割当には使用しません",
+  );
+  await noOverflow(page);
+});
