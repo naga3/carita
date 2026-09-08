@@ -31,5 +31,9 @@ async function collect(directory, recursive = false) {
 }
 for (const directory of packages) await collect(directory);
 await collect("node_modules/next/dist/compiled", true);
+parts.push(
+  "\nPrimer Octicons — GitHub mark\nhttps://github.com/primer/octicons\n\n" +
+    (await readFile("third-party/octicons/LICENSE", "utf8")),
+);
 await writeFile("public/third-party-notices.txt", parts.join("\n"));
 console.log(`Wrote third-party notices (${parts.length - 1} files).`);

@@ -21,3 +21,7 @@ public/images/ の3点は OpenAI の画像生成機能で新規制作した創�
 Next.js / React などの依存パッケージと Next.js 内包ライブラリのライセンス文を `scripts/notices.mjs` で収集し、ビルドごとに public/third-party-notices.txt を更新して配布する。サーバー専用の依存も含む保守的な一覧。フォントファイルは同梱せず、閲覧端末のシステムフォントを使用する。
 
 この記録は確認した素材の来歴と扱いを説明するもので、無条件の法的保証や、リポジトリ全体への一括した再利用許諾ではない。
+
+## GitHub アイコン
+
+フッターは [Primer Octicons の mark-github-16](https://github.com/primer/octicons/blob/main/icons/mark-github-16.svg) を使用。MIT ライセンス原文を `third-party/octicons/LICENSE` に保存し、公開する権利表示にも収録する。GitHub 上のリポジトリへのリンクとして使用する。
