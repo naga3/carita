@@ -19,7 +19,7 @@ export function Scene({
   return (
     <figure className={`scene scene-${name} ${className}`}>
       <Image
-        src={`/images/${name}.webp`}
+        src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/${name}.webp`}
         alt=""
         width={1536}
         height={1024}

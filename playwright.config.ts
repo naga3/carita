@@ -15,7 +15,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "PORT=43871 npm run preview",
-    url: "http://127.0.0.1:43871",
+    url: `http://127.0.0.1:43871${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/`,
     reuseExistingServer: false,
     timeout: 30000,
   },

@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, extname, sep } from "node:path";
 const root = resolve("out");
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const mime = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
@@ -9,14 +10,19 @@ const mime = {
   ".json": "application/json",
   ".txt": "text/plain; charset=utf-8",
   ".ico": "image/x-icon",
+  ".webp": "image/webp",
   ".svg": "image/svg+xml",
 };
 createServer(async (req, res) => {
   try {
-    let file = resolve(
-      root,
-      "." + decodeURIComponent(new URL(req.url, "http://localhost").pathname),
+    const pathname = decodeURIComponent(
+      new URL(req.url, "http://localhost").pathname,
     );
+    if (basePath && !pathname.startsWith(basePath + "/")) {
+      res.writeHead(404).end();
+      return;
+    }
+    let file = resolve(root, "." + pathname.slice(basePath.length));
     if (file !== root && !file.startsWith(root + sep)) {
       res.writeHead(403).end();
       return;

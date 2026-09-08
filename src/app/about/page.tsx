@@ -93,6 +93,28 @@ export default function AboutPage() {
           タイの森の僧院、スリランカの菩提樹の下、ミャンマーの村をイメージした創作イラストです。AIで制作した挿絵で、実在の場所の写真・歴史的復元・修行の手順図ではありません。それぞれの地域の文化すべてを代表するものでもありません。
         </p>
       </section>
+      <section className="section" id="credits">
+        <h2>出典と権利表示</h2>
+        <p>
+          日本語の説明・質問・日常例は、本サイトで作成した要約や表現です。参照した現代語訳の本文は転載していません。パーリ語の抜粋は出典と箇所を併記しています。SuttaCentral
+          の採用データは公開ライセンス（CC0）の範囲で使用しています。
+        </p>
+        <p>
+          画像は OpenAI
+          の画像生成機能で制作しています。出典サイト・翻訳者・各地域の宗教団体による監修や推奨を示すものではありません。
+        </p>
+        <p>
+          <a href="https://github.com/naga3/carita/blob/main/docs/rights.md">
+            素材と出典の確認記録
+          </a>{" "}
+          ·{" "}
+          <a
+            href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/third-party-notices.txt`}
+          >
+            利用ソフトウェアのライセンス
+          </a>
+        </p>
+      </section>
       <Link className="button" href="/questions/">
         質問に答える →
       </Link>

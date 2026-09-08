@@ -1,4 +1,5 @@
 import { Scene } from "@/components/scene";
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
@@ -15,7 +16,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja">
-      <body>
+      <body
+        style={
+          {
+            "--forest-image": `url("${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/forest.webp")`,
+            "--learning-image": `url("${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/learning.webp")`,
+          } as CSSProperties
+        }
+      >
         <a className="skip-link" href="#main">
           本文へ移動
         </a>

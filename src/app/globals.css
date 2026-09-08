@@ -831,8 +831,7 @@ details[open] > summary {
 /* Illustrated reading edition: scenes frame opaque reading surfaces. */
 body {
   background-color: #eeeadd;
-  background-image:
-    linear-gradient(#f7f6f1a8, #f7f6f1bb), url("/images/forest.webp");
+  background-image: linear-gradient(#f7f6f1a8, #f7f6f1bb), var(--forest-image);
   background-size: cover;
   background-attachment: fixed;
   background-position: center top;
@@ -1055,7 +1054,7 @@ footer {
 .result-summary {
   background:
     linear-gradient(100deg, #ecf1e5ff, #eff2e9ec),
-    url("/images/forest.webp") center/cover;
+    var(--forest-image) center/cover;
 }
 .question-banner {
   height: 150px;
@@ -1261,7 +1260,7 @@ footer {
 .reading-guide {
   background:
     linear-gradient(110deg, #fffaf0f5, #faf7e9eb),
-    url("/images/learning.webp") center/cover;
+    var(--learning-image) center/cover;
 }
 @media (max-width: 760px) {
   body {

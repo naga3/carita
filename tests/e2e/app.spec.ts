@@ -1,5 +1,6 @@
 import { sampleAnswers } from "../fixtures";
 import { test, expect, type Page } from "@playwright/test";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 async function finish(page: Page, skip = false) {
   for (let i = 0; i < 10; i++) {
     await expect(
@@ -42,7 +43,7 @@ test("全質問・出典・同点・回答修正・再読込・消去", async ({
     )
       sends.push(r.url());
   });
-  await page.goto("/");
+  await page.goto(basePath + "/");
   await noOverflow(page);
   await page.screenshot({
     path: `test-results/home-${info.project.name}.png`,
@@ -91,7 +92,7 @@ test("全質問・出典・同点・回答修正・再読込・消去", async ({
   await page.getByRole("link", { name: "回答を見直す →" }).click();
   await page.locator('input[value="flaw"]').check();
   await page.locator(".site-header .wordmark").click();
-  await page.goto("/result/");
+  await page.goto(basePath + "/result/");
   await expect(
     page.locator(".count-row").filter({ hasText: "貪行" }),
   ).toContainText("4 件");
@@ -106,7 +107,7 @@ test("全質問・出典・同点・回答修正・再読込・消去", async ({
   expect(sends).toEqual([]);
 });
 test("未回答・壊れた保存・全スキップ", async ({ page }) => {
-  await page.goto("/result/");
+  await page.goto(basePath + "/result/");
   await expect(
     page.getByRole("heading", { name: "まだ回答がそろっていません" }),
   ).toBeVisible();
@@ -126,18 +127,18 @@ test("未回答・壊れた保存・全スキップ", async ({ page }) => {
   await noOverflow(page);
 });
 test("途中の再読込と出典・方針ページ", async ({ page }) => {
-  await page.goto("/questions/");
+  await page.goto(basePath + "/questions/");
   await page.getByRole("radio").first().check();
   await page.getByRole("button", { name: "次の質問 →", exact: true }).click();
   await page.reload();
   await expect(page.getByText("質問 2 / 10", { exact: true })).toBeVisible();
-  await page.goto("/sources/");
+  await page.goto(basePath + "/sources/");
   await expect(
     page.getByRole("heading", { name: "出典を読む", exact: true }),
   ).toBeVisible();
   await expect(page.locator("#m14-moha")).toContainText("garusaṁvāse");
   await noOverflow(page);
-  await page.goto("/about/");
+  await page.goto(basePath + "/about/");
   await expect(
     page.getByRole("heading", { name: "一致数は、仏典の点数ではありません" }),
   ).toBeVisible();
@@ -151,7 +152,7 @@ test("保存が使えない場合にも回答できる", async ({ page }) => {
       },
     });
   });
-  await page.goto("/questions/");
+  await page.goto(basePath + "/questions/");
   await page.getByRole("radio").first().check();
   await expect(page.getByRole("status")).toContainText("保存できない");
   await finish(page);
@@ -161,7 +162,7 @@ test("保存が使えない場合にも回答できる", async ({ page }) => {
 });
 
 test("参考の意訳・日常例・追加の出典とイラスト", async ({ page }) => {
-  await page.goto("/");
+  await page.goto(basePath + "/");
   await expect(page.locator(".hero-landscape img")).toBeVisible();
   expect(
     await page
@@ -178,7 +179,7 @@ test("参考の意訳・日常例・追加の出典とイラスト", async ({ pa
       ),
     sampleAnswers,
   );
-  await page.goto("/result/");
+  await page.goto(basePath + "/result/");
   await expect(page.locator(".practice-card .reading-aid")).toHaveCount(11);
   const breath = page
     .locator(".practice-card")
@@ -205,7 +206,7 @@ test("参考の意訳・日常例・追加の出典とイラスト", async ({ pa
 });
 
 test("質問改訂の通知と旧回答の混用防止", async ({ page }) => {
-  await page.goto("/");
+  await page.goto(basePath + "/");
   await page.evaluate(
     (answers) =>
       localStorage.setItem(
@@ -214,7 +215,7 @@ test("質問改訂の通知と旧回答の混用防止", async ({ page }) => {
       ),
     sampleAnswers,
   );
-  await page.goto("/result/");
+  await page.goto(basePath + "/result/");
   await expect(
     page.getByText(
       "質問を改訂したため、以前の回答は今回の照合に使っていません。新しい場面の質問からお答えください。",
@@ -235,4 +236,32 @@ test("質問改訂の通知と旧回答の混用防止", async ({ page }) => {
   await page.getByRole("button", { name: "← 前の質問", exact: true }).click();
   await expect(page.locator('input[value="appeal"]')).toBeChecked();
   await noOverflow(page);
+});
+
+test("公開パスの画像・背景・権利表示が読み込める", async ({
+  page,
+  request,
+}) => {
+  const failures: string[] = [];
+  page.on("response", (response) => {
+    if (response.status() >= 400) failures.push(response.url());
+  });
+  await page.goto(basePath + "/");
+  for (const img of await page.locator("img").all()) {
+    await img.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth))
+      .toBeGreaterThan(0);
+    expect(await img.getAttribute("src")).toMatch(
+      new RegExp(`^${basePath}/images/`),
+    );
+  }
+  const background = await page
+    .locator("body")
+    .evaluate((el) => getComputedStyle(el).getPropertyValue("--forest-image"));
+  expect(background).toContain(basePath + "/images/forest.webp");
+  const notice = await request.get(basePath + "/third-party-notices.txt");
+  expect(notice.ok()).toBe(true);
+  expect(await notice.text()).toContain("MIT License");
+  expect(failures).toEqual([]);
 });
