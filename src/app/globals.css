@@ -1457,3 +1457,10 @@ footer {
     padding: 23px 18px;
   }
 }
+.question-update {
+  padding: 16px 18px;
+  border-left: 3px solid #b08e54;
+  background: #f7eedb;
+  border-radius: 5px;
+  font-size: 13px;
+}

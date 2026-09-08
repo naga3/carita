@@ -1,3 +1,4 @@
+import { sampleAnswers } from "../fixtures";
 import { test, expect, type Page } from "@playwright/test";
 async function finish(page: Page, skip = false) {
   for (let i = 0; i < 10; i++) {
@@ -5,7 +6,14 @@ async function finish(page: Page, skip = false) {
       page.getByText(`質問 ${i + 1} / 10`, { exact: true }),
     ).toBeVisible();
     const radios = page.getByRole("radio");
-    await (skip ? radios.last() : radios.first()).check();
+    const questionId = await radios.first().getAttribute("name");
+    if (skip) await radios.last().check();
+    else
+      await page
+        .locator(
+          `input[value="${sampleAnswers[questionId as keyof typeof sampleAnswers]}"]`,
+        )
+        .check();
     await page
       .getByRole("button", {
         name: i === 9 ? "結果を見る →" : "次の質問 →",
@@ -45,9 +53,7 @@ test("全質問・出典・同点・回答修正・再読込・消去", async ({
     page.getByRole("button", { name: "次の質問 →", exact: true }),
   ).toBeDisabled();
   await page.getByText("この質問の出典を見る", { exact: true }).click();
-  await expect(
-    page.getByText("III.88–90 / §45", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText("III.94 / §45", { exact: true })).toBeVisible();
   await noOverflow(page);
   await page.getByText("この質問の出典を見る", { exact: true }).click();
   await page.getByRole("radio").first().check();
@@ -83,7 +89,7 @@ test("全質問・出典・同点・回答修正・再読込・消去", async ({
     page.getByRole("heading", { name: "貪行・信行", exact: true }),
   ).toBeVisible();
   await page.getByRole("link", { name: "回答を見直す →" }).click();
-  await page.getByRole("radio").nth(1).check();
+  await page.locator('input[value="flaw"]').check();
   await page.locator(".site-header .wordmark").click();
   await page.goto("/result/");
   await expect(
@@ -164,25 +170,13 @@ test("参考の意訳・日常例・追加の出典とイラスト", async ({ pa
         (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
       ),
   ).toBe(true);
-  await page.evaluate(() =>
-    localStorage.setItem(
-      "carita:answers:v1",
-      JSON.stringify({
-        version: 1,
-        answers: {
-          walking: "0",
-          work: "0",
-          eating: "0",
-          seeing: "0",
-          "mental-raga": "yes",
-          "mental-dosa": "yes",
-          "mental-moha": "yes",
-          "mental-saddha": "yes",
-          "mental-buddhi": "yes",
-          "mental-vitakka": "yes",
-        },
-      }),
-    ),
+  await page.evaluate(
+    (answers) =>
+      localStorage.setItem(
+        "carita:answers:v1",
+        JSON.stringify({ version: 2, answers }),
+      ),
+    sampleAnswers,
   );
   await page.goto("/result/");
   await expect(page.locator(".practice-card .reading-aid")).toHaveCount(11);
@@ -207,5 +201,38 @@ test("参考の意訳・日常例・追加の出典とイラスト", async ({ pa
   await expect(page.locator("#reader-breath")).toContainText(
     "気質の割当には使用しません",
   );
+  await noOverflow(page);
+});
+
+test("質問改訂の通知と旧回答の混用防止", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(
+    (answers) =>
+      localStorage.setItem(
+        "carita:answers:v1",
+        JSON.stringify({ version: 1, answers }),
+      ),
+    sampleAnswers,
+  );
+  await page.goto("/result/");
+  await expect(
+    page.getByText(
+      "質問を改訂したため、以前の回答は今回の照合に使っていません。新しい場面の質問からお答えください。",
+    ),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "質問へ進む →" }).click();
+  await expect(page.locator(".question-update")).toBeVisible();
+  await expect(page.getByText("質問 1 / 10", { exact: true })).toBeVisible();
+  await expect(page.locator("input:checked")).toHaveCount(0);
+  await page.locator('input[value="appeal"]').check();
+  expect(
+    await page.evaluate(
+      () => JSON.parse(localStorage.getItem("carita:answers:v1")!).version,
+    ),
+  ).toBe(2);
+  await page.reload();
+  await expect(page.getByText("質問 2 / 10", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "← 前の質問", exact: true }).click();
+  await expect(page.locator('input[value="appeal"]')).toBeChecked();
   await noOverflow(page);
 });

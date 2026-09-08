@@ -11,7 +11,7 @@ import { score } from "@/domain/scoring";
 import { useAnswers, clearAnswers } from "@/lib/answer-store";
 import { SourceCard, traditionLabels } from "./source-card";
 export function ResultView() {
-  const { answers, ready, persistent } = useAnswers();
+  const { answers, ready, persistent, questionnaireChanged } = useAnswers();
   const router = useRouter();
   if (!ready)
     return (
@@ -25,6 +25,11 @@ export function ResultView() {
       <div className="narrow page">
         <p className="eyebrow">YOUR REFLECTION</p>
         <h1>まだ回答がそろっていません</h1>
+        {questionnaireChanged && (
+          <p className="question-update">
+            質問を改訂したため、以前の回答は今回の照合に使っていません。新しい場面の質問からお答えください。
+          </p>
+        )}
         <p>全10問に回答すると、一致する記述と根拠を確認できます。</p>
         <Link className="button" href="/questions/">
           質問へ進む →

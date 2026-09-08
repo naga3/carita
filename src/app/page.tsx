@@ -48,7 +48,7 @@ export default function Home() {
         <div>
           <span className="step-num">01</span>
           <h2>日常を振り返る</h2>
-          <p>歩き方や心の動きなど、文献に根拠のある10の問い。</p>
+          <p>食事や買い物、会話のあと。日常の場面から振り返る10の問い。</p>
         </div>
         <div>
           <span className="step-num">02</span>

@@ -1,3 +1,5 @@
+import { sampleAnswers } from "./fixtures";
+import { decodeAnswerSession } from "@/domain/answer-session";
 import { practiceNotes, glossaryNotes } from "@/data/reading-notes";
 import { describe, expect, it } from "vitest";
 import { questions } from "@/data/questions";
@@ -51,15 +53,15 @@ describe("出典とデータの契約", () => {
 });
 describe("決定論的一致数", () => {
   it("同じ回答なら同じ結果・同点を全件保持", () => {
-    const a = { walking: "0" };
+    const a = { q01: "appeal" };
     expect(score(a)).toEqual(score(a));
     expect(score(a).leaders.map((c) => c.id)).toEqual(["raga", "saddha"]);
   });
   it("変更時は古い回答を加算しない", () => {
     expect(
-      score({ walking: "1" }).counts.find((c) => c.id === "raga")?.count,
+      score({ q01: "flaw" }).counts.find((c) => c.id === "raga")?.count,
     ).toBe(0);
-    expect(score({ walking: "1" }).leaders.map((c) => c.id)).toEqual([
+    expect(score({ q01: "flaw" }).leaders.map((c) => c.id)).toEqual([
       "dosa",
       "buddhi",
     ]);
@@ -71,7 +73,7 @@ describe("決定論的一致数", () => {
     expect(score(a).leaders).toEqual([]);
   });
   it("不正な保存値を排除", () => {
-    for (const a of [null, 3, [], { walking: "bad", unknown: "yes" }, "bad"])
+    for (const a of [null, 3, [], { q01: "bad", unknown: "yes" }, "bad"])
       expect(sanitizeAnswers(a)).toEqual({});
   });
   it("interpretiveは実行時にもスコア対象外", () => {
@@ -79,12 +81,12 @@ describe("決定論的一致数", () => {
       ...questions[0],
       evidenceLevel: "interpretive",
     } as unknown as Question;
-    expect(score({ walking: "0" }, [q]).matches).toEqual([]);
+    expect(score({ q01: "appeal" }, [q]).matches).toEqual([]);
   });
   it("一つの回答の同じ気質を重複カウントしない", () => {
     const q = structuredClone(questions[0]);
     q.answers[0].evidence.push(q.answers[0].evidence[0]);
-    expect(score({ walking: "0" }, [q]).leaders[0].count).toBe(1);
+    expect(score({ q01: "appeal" }, [q]).leaders[0].count).toBe(1);
   });
 });
 
@@ -106,5 +108,61 @@ describe("参考説明は出典付きの別データ", () => {
     }
     for (const q of questions)
       expect(q.sourceIds.every((id) => !id.startsWith("reader-"))).toBe(true);
+  });
+});
+
+describe("場面質問への改訂", () => {
+  it("10問の実回答から期待する件数と同点を再現する", () => {
+    const result = score(sampleAnswers);
+    expect(result.complete).toBe(true);
+    expect(
+      Object.fromEntries(result.counts.map((c) => [c.id, c.count])),
+    ).toEqual({ raga: 5, saddha: 5, dosa: 1, buddhi: 1, moha: 1, vitakka: 1 });
+    expect(result.leaders.map((c) => c.id)).toEqual(["raga", "saddha"]);
+  });
+  it("歩行への間接推定を採点せず、旧質問のIDを無視する", () => {
+    expect(questions).toHaveLength(10);
+    for (const q of questions) {
+      expect(q.scene).toBeTruthy();
+      expect(q.context).toBeTruthy();
+      expect(q.sourceIds).not.toContain("v88");
+    }
+    expect(
+      score({ walking: "0", work: "0", "mental-raga": "yes" }).matches,
+    ).toEqual([]);
+  });
+  it("選択肢を逆順表示しても、選択したIDの結果は変わらない", () => {
+    const reordered = questions.map((q) => ({
+      ...q,
+      answers: [...q.answers].reverse(),
+    }));
+    const original = score(sampleAnswers);
+    const reversed = score(sampleAnswers, reordered);
+    expect(reversed.counts).toEqual(original.counts);
+    expect(reversed.leaders).toEqual(original.leaders);
+    expect(
+      reversed.matches.map((m) => ({
+        questionId: m.question.id,
+        answerId: m.answer.id,
+        evidence: m.evidence,
+      })),
+    ).toEqual(
+      original.matches.map((m) => ({
+        questionId: m.question.id,
+        answerId: m.answer.id,
+        evidence: m.evidence,
+      })),
+    );
+  });
+  it("旧版の保存回答を新しい質問に読み替えない", () => {
+    expect(decodeAnswerSession({ version: 1, answers: sampleAnswers })).toEqual(
+      { answers: {}, questionnaireChanged: true },
+    );
+    expect(decodeAnswerSession({ version: 2, answers: sampleAnswers })).toEqual(
+      { answers: sampleAnswers, questionnaireChanged: false },
+    );
+    expect(
+      decodeAnswerSession({ version: 2, answers: { walking: "0" } }).answers,
+    ).toEqual({});
   });
 });

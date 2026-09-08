@@ -15,6 +15,8 @@ export type Evidence = { carita: Carita; strength: 1 | 2; sourceId: string };
 export type Question = {
   id: string;
   text: string;
+  scene?: string;
+  context?: string;
   category: "posture" | "action" | "eating" | "perception" | "mental-state";
   evidenceLevel: Exclude<EvidenceLevel, "interpretive">;
   sourceIds: string[];

@@ -20,7 +20,7 @@ export const sources: Source[] = [
     traditionLevel: "commentarial",
     pali: "saṇikaṃ pādaṃ nikkhipati",
     japaneseSummary:
-      "歩行について、貪はゆっくり均等に足を運び、瞋は急に足を置き上げ、痴はためらうように歩く。信・智・尋にはそれぞれ貪・瞋・痴との類似を適用する。",
+      "参考記録（現行の質問では不採用）。歩行について、貪はゆっくり均等に足を運び、瞋は急に足を置き上げ、痴はためらうように歩く。信・智・尋にはそれぞれ貪・瞋・痴との類似を適用する。",
     externalUrl:
       "https://vietheravada.net/kinhdien/visuddhimagga/visuddhimagga1.htm",
   },
@@ -40,9 +40,9 @@ export const sources: Source[] = [
     work: "Visuddhimagga（清浄道論）",
     location: "III.93 / §45",
     traditionLevel: "commentarial",
-    pali: "vikkhittacitto taṃ taṃ vitakkento bhuñjati",
+    pali: "siniddhamadhurabhojanappiyo / lūkhaambilabhojanappiyo / aniyataruciko",
     japaneseSummary:
-      "食事について、貪は急がず味わい、瞋は急ぎ味わわず、痴は気が散ってあれこれ考える。信・智・尋にもそれぞれの類似を適用する。",
+      "食事について、貪は甘く脂のある食を好み急がず味わい、瞋は粗く酸味のある食を好み急ぎ味わわず、痴は好みが定まらず気が散ってあれこれ考える。信・智・尋にもそれぞれの類似を適用する。",
     externalUrl:
       "https://vietheravada.net/kinhdien/visuddhimagga/visuddhimagga1.htm",
   },
@@ -94,7 +94,7 @@ export const sources: Source[] = [
     work: "Visuddhimagga（清浄道論）",
     location: "III.95 / §45",
     traditionLevel: "commentarial",
-    pali: "saddhammaṃ sotukāmatā",
+    pali: "muttacāgatā, saddhammaṃ sotukāmatā",
     japaneseSummary:
       "信行に頻出する状態として、施し、聖者に会いたい思い、正法を聞きたい思いなどが列挙される。",
     externalUrl:
@@ -116,7 +116,7 @@ export const sources: Source[] = [
     work: "Visuddhimagga（清浄道論）",
     location: "III.95 / §45",
     traditionLevel: "commentarial",
-    pali: "hurāhuraṃ dhāvanā",
+    pali: "bhassabahulatā, hurāhuraṃ dhāvanā",
     japaneseSummary:
       "尋行に頻出する状態として、多く語ること、作業を完遂しないこと、心があちこちへ走ることなどが列挙される。",
     externalUrl:

@@ -13,7 +13,7 @@ const categories = {
   "mental-state": "心に起こる状態",
 };
 export function QuestionFlow() {
-  const { answers, ready, persistent } = useAnswers();
+  const { answers, ready, persistent, questionnaireChanged } = useAnswers();
   if (!ready)
     return (
       <div className="narrow page" role="status">
@@ -28,6 +28,7 @@ export function QuestionFlow() {
       )}
       answers={answers}
       persistent={persistent}
+      questionnaireChanged={questionnaireChanged}
     />
   );
 }
@@ -35,10 +36,12 @@ function Flow({
   initialIndex,
   answers,
   persistent,
+  questionnaireChanged,
 }: {
   initialIndex: number;
   answers: Record<string, string>;
   persistent: boolean;
+  questionnaireChanged: boolean;
 }) {
   const [index, setIndex] = useState(initialIndex);
   const router = useRouter();
@@ -57,11 +60,16 @@ function Flow({
         <p>ひとつずつ、ふだんを振り返る。</p>
       </div>
       <p className="eyebrow">OBSERVE & REFLECT</p>
+      {questionnaireChanged && (
+        <p className="question-update">
+          質問を日常の場面に合わせて改訂しました。以前の回答を新しい質問に読み替えず、最初からお答えいただきます。
+        </p>
+      )}
       <div className="question-progress">
         <span>
           質問 {index + 1} / {questions.length}
         </span>
-        <span>{categories[q.category]}</span>
+        <span>{q.scene ?? categories[q.category]}</span>
       </div>
       <progress
         aria-label="質問の進捗"
@@ -72,13 +80,11 @@ function Flow({
         <h1 id="question-title" tabIndex={-1}>
           {q.text}
         </h1>
-        <p className="muted">
-          近い記述を一つ選んでください。迷う場合は、判断できないと答えられます。
-        </p>
+        <p className="muted">{q.context ?? "近い記述を一つ選んでください。"}</p>
         <details className="answer-help">
           <summary>答え方のヒント</summary>
           <p>
-            理想の振る舞いではなく、実際に近いと感じる記述を選びます。どれも近くないときや、状況で変わって決められないときは「判断できない」で大丈夫です。正解・不正解はありません。
+            理想の振る舞いではなく、実際に近いと感じる記述を選びます。どれも近くないときや、状況で変わって決められないときは「どれも近くない・場面が浮かばない」で大丈夫です。正解・不正解はありません。
           </p>
         </details>
         <fieldset>
