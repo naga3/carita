@@ -1,0 +1,155 @@
+import { test, expect, type Page } from "@playwright/test";
+async function finish(page: Page, skip = false) {
+  for (let i = 0; i < 10; i++) {
+    await expect(
+      page.getByText(`質問 ${i + 1} / 10`, { exact: true }),
+    ).toBeVisible();
+    const radios = page.getByRole("radio");
+    await (skip ? radios.last() : radios.first()).check();
+    await page
+      .getByRole("button", {
+        name: i === 9 ? "結果を見る →" : "次の質問 →",
+        exact: true,
+      })
+      .click();
+  }
+  await expect(page).toHaveURL(/\/result\//);
+}
+async function noOverflow(page: Page) {
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+}
+test("全質問・出典・同点・回答修正・再読込・消去", async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  const sends: string[] = [];
+  page.on("request", (r) => {
+    if (
+      !["GET", "HEAD"].includes(r.method()) ||
+      r.postData() ||
+      new URL(r.url()).origin !== "http://127.0.0.1:43871"
+    )
+      sends.push(r.url());
+  });
+  await page.goto("/");
+  await noOverflow(page);
+  await page.screenshot({
+    path: `test-results/home-${info.project.name}.png`,
+    fullPage: true,
+  });
+  await page.getByRole("link", { name: "診断を始める" }).click();
+  await expect(
+    page.getByRole("button", { name: "次の質問 →", exact: true }),
+  ).toBeDisabled();
+  await page.getByText("この質問の出典を見る", { exact: true }).click();
+  await expect(
+    page.getByText("III.88–90 / §45", { exact: true }),
+  ).toBeVisible();
+  await noOverflow(page);
+  await page.getByText("この質問の出典を見る", { exact: true }).click();
+  await page.getByRole("radio").first().check();
+  await page.getByRole("button", { name: "次の質問 →", exact: true }).click();
+  await page.getByRole("button", { name: "← 前の質問", exact: true }).click();
+  await expect(page.getByRole("radio").first()).toBeChecked();
+  await page.screenshot({
+    path: `test-results/question-${info.project.name}.png`,
+    fullPage: true,
+  });
+  await finish(page);
+  await expect(
+    page.getByRole("heading", { name: "貪行・信行", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "学習・質問・聞法・対話・師との生活" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "三蔵での根拠", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "『清浄道論』での補足", exact: true }),
+  ).toBeVisible();
+  await page.locator(".match summary").first().click();
+  await expect(page.locator(".match[open] blockquote")).toBeVisible();
+  await noOverflow(page);
+  await page.screenshot({
+    path: `test-results/result-${info.project.name}.png`,
+    fullPage: true,
+  });
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "貪行・信行", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "回答を見直す →" }).click();
+  await page.getByRole("radio").nth(1).check();
+  await page.locator(".site-header .wordmark").click();
+  await page.goto("/result/");
+  await expect(
+    page.locator(".count-row").filter({ hasText: "貪行" }),
+  ).toContainText("4 件");
+  await page
+    .getByRole("button", { name: "保存した回答を消去して、やり直す" })
+    .click();
+  await expect(page.getByRole("radio").first()).not.toBeChecked();
+  expect(
+    await page.evaluate(() => localStorage.getItem("carita:answers:v1")),
+  ).toBeNull();
+  expect(errors).toEqual([]);
+  expect(sends).toEqual([]);
+});
+test("未回答・壊れた保存・全スキップ", async ({ page }) => {
+  await page.goto("/result/");
+  await expect(
+    page.getByRole("heading", { name: "まだ回答がそろっていません" }),
+  ).toBeVisible();
+  await page.evaluate(() =>
+    localStorage.setItem("carita:answers:v1", "{broken"),
+  );
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "まだ回答がそろっていません" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "質問へ進む →" }).click();
+  await finish(page, true);
+  await expect(
+    page.getByRole("heading", { name: "一致する記述はありませんでした" }),
+  ).toBeVisible();
+  expect(await page.locator(".practice-card").count()).toBe(0);
+  await noOverflow(page);
+});
+test("途中の再読込と出典・方針ページ", async ({ page }) => {
+  await page.goto("/questions/");
+  await page.getByRole("radio").first().check();
+  await page.getByRole("button", { name: "次の質問 →", exact: true }).click();
+  await page.reload();
+  await expect(page.getByText("質問 2 / 10", { exact: true })).toBeVisible();
+  await page.goto("/sources/");
+  await expect(
+    page.getByRole("heading", { name: "出典を読む", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("#m14-moha")).toContainText("garusaṁvāse");
+  await noOverflow(page);
+  await page.goto("/about/");
+  await expect(
+    page.getByRole("heading", { name: "一致数は、仏典の点数ではありません" }),
+  ).toBeVisible();
+  await noOverflow(page);
+});
+test("保存が使えない場合にも回答できる", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(Storage.prototype, "setItem", {
+      value: () => {
+        throw new Error("storage blocked");
+      },
+    });
+  });
+  await page.goto("/questions/");
+  await page.getByRole("radio").first().check();
+  await expect(page.getByRole("status")).toContainText("保存できない");
+  await finish(page);
+  await expect(
+    page.getByRole("heading", { name: "貪行・信行", exact: true }),
+  ).toBeVisible();
+});
