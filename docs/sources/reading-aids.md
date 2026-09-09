@@ -18,14 +18,3 @@
 Access to Insight はパーリ経典の公開英訳、清浄道論は Ñāṇamoli 英訳の一次文献本文で語義を確認した。ここでの新規参考説明はパーリ語の校訂や逐語訳を主張しない。日本語は自作の要約・意訳で、長文の転載はしない。
 
 学習会で質問する、一日の終わりに戒を振り返る等は、ユーザーが原文を理解するための現代の場面例。文献にその生活場面が書かれているとは表示せず、interpretive として位置づける。これらの例から新たな気質特徴や採点条件は作成していない。
-
-## 現代の実践名への案内（2026-09-09）
-
-ユーザーの「正確さを失わず、現代の瞑想法で読めるように」という依頼への対応。
-結果カードは `practiceNotes.practiceName` の現代語見出し・既存の意訳を先に表示し、原典名と要約は開閉可能にした。原典の対応・採点は変更しない。
-
-- 呼吸瞑想は入出息念の入口、慈悲の瞑想はそのうちの慈（メッタ）と限定する。
-- [マハーシ師の指導](https://www.aimwell.org/vipassana.html)で心内のノーティングと経験の観察を確認。ヴィパッサナーの一例として比較するが、Mahāniddesa がラベリングを指定したとはしない。
-- [UMass資料](https://www.umassmed.edu/contentassets/df303ddceb3c4fcd84283d5e2aee9970/mindfulness-and-health.pdf)と[MBSRの説明](https://www.ummhealth.org/services-treatments/center-mindfulness/mindfulness-programs/mbsr)でボディスキャン・ヨガなどを確認。身至念・不浄・四界分別の同義語にはしない。
-- [ティアン師の説明](https://www.mahasati.org/manual--3.htm)で身体・心の動きへの気づきを確認。「チャルーンサティ」はここではティアン系の動く実践と対象を限定する。
-- 比較は `modern-practice-guide.tsx` に用途を明記した出典リンク付きで置く。現代資料を canonical / commentarial のいずれかに偽って分類せず、PracticeRecommendation や気質への新規割当も作らない。無一致時にはこの案内を表示しない。

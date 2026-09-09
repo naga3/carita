@@ -1,6 +1,5 @@
 "use client";
 import { Scene, type SceneName } from "./scene";
-import { ModernPracticeGuide } from "./modern-practice-guide";
 import { ReadingAid } from "./reading-note";
 import { practiceNotes } from "@/data/reading-notes";
 import Link from "next/link";
@@ -99,11 +98,12 @@ export function ResultView() {
         </p>
       </section>
       <section className="section">
-        <h2>いまのことばで読む、瞑想と学び</h2>
+        <h2>文献上、対応するとされる修行法</h2>
         <div className="reference-intro">
           <strong>昔のことばを、いまのことばで。</strong>
           <p>
-            現代の実践名や、何をする方法かがわかる見出しで紹介します。説明は参考の意訳です。「原典の名前・要約」を開くと、元の名称と文献の対応も確認できます。
+            各カードの「参考 ·
+            意訳」に、やさしい説明を添えました。身近な例は本サイトの補助説明です。原典の要約と区別してお読みください。
           </p>
         </div>
         <p>
@@ -133,32 +133,25 @@ export function ResultView() {
                       }
                       className="practice-scene"
                     />
+                    <span className={`badge ${level}`}>
+                      {traditionLabels[level]} · direct
+                    </span>
                     <p className="micro">
                       {p.caritas
                         .map((c) => caritas.find((x) => x.id === c)?.name)
                         .join("・")}
                     </p>
-                    <span className="badge">現代語の案内 · 参考</span>
-                    <h3>
-                      {practiceNotes.find((note) => note.id === p.id)
-                        ?.practiceName ?? p.nameJa}
-                    </h3>
+                    <h3>{p.nameJa}</h3>
+                    <p lang="pi" className="pali">
+                      {p.namePali}
+                    </p>
+                    <p className="original-label">文献の要約</p>
+                    <p>{p.description}</p>
                     {practiceNotes
                       .filter((note) => note.id === p.id)
                       .map((note) => (
                         <ReadingAid key={note.id} note={note} />
                       ))}
-                    <details className="reading-references">
-                      <summary>原典の名前・要約</summary>
-                      <span className={`badge ${level}`}>
-                        {traditionLabels[level]} · {p.evidenceLevel}
-                      </span>
-                      <h4>{p.nameJa}</h4>
-                      <p lang="pi" className="pali">
-                        {p.namePali}
-                      </p>
-                      <p>{p.description}</p>
-                    </details>
                     {p.sourceIds.map((id) => (
                       <a key={id} href={`#evidence-${id}`}>
                         対応の根拠を読む →
@@ -177,7 +170,6 @@ export function ResultView() {
           </p>
         )}
       </section>
-      {recommended.length > 0 && <ModernPracticeGuide />}
       <section className="section">
         <h2>三蔵での根拠</h2>
         <p>

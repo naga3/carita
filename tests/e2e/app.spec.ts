@@ -70,7 +70,7 @@ test("全質問・出典・同点・回答修正・再読込・消去", async ({
     page.getByRole("heading", { name: "貪行・信行", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "教えを学び、質問・対話する" }),
+    page.getByRole("heading", { name: "学習・質問・聞法・対話・師との生活" }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "三蔵での根拠", exact: true }),
@@ -184,28 +184,6 @@ test("参考の意訳・日常例・追加の出典とイラスト", async ({ pa
   const breath = page
     .locator(".practice-card")
     .filter({ hasText: "いま、吸っている息・吐いている息に気づく" });
-  await expect(
-    breath.getByRole("heading", {
-      name: "呼吸瞑想（呼吸のマインドフルネス）",
-      exact: true,
-    }),
-  ).toBeVisible();
-  await expect(
-    breath.getByRole("heading", { name: "入出息念", exact: true }),
-  ).not.toBeVisible();
-  await breath.getByText("原典の名前・要約", { exact: true }).click();
-  await expect(
-    breath.getByRole("heading", { name: "入出息念", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      name: "ラベリング（ノーティング）",
-      exact: true,
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "ボディスキャン", exact: true }),
-  ).toBeVisible();
   await expect(breath.locator(".reading-label")).toContainText("参考 · 意訳");
   await expect(breath.locator(".everyday-example")).toContainText(
     "本サイトの例",
@@ -213,9 +191,9 @@ test("参考の意訳・日常例・追加の出典とイラスト", async ({ pa
   await breath
     .getByText("この参考説明の位置づけ・出典", { exact: true })
     .click();
-  await expect(
-    breath.locator(".reading-aid .reading-references"),
-  ).toContainText("採点には使いません");
+  await expect(breath.locator(".reading-references")).toContainText(
+    "採点には使いません",
+  );
   await noOverflow(page);
   await breath
     .getByRole("link", { name: "参照 reader-breath →", exact: true })
