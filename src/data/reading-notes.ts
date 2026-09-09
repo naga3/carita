@@ -2,6 +2,7 @@ import type { ReadingNote } from "@/domain/types";
 export const practiceNotes: ReadingNote[] = [
   {
     id: "m14-raga",
+    practiceName: "身体の美化を見直す観察",
     title: "身体を、美しいイメージだけで見ない",
     explanation:
       "身体の構成や変化にも目を向け、魅力的だと感じる面だけに心が引かれる見方を見直す、という教えです。",
@@ -12,6 +13,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "m14-dosa",
+    practiceName: "慈悲の瞑想（慈・メッタ）",
     title: "生きものの幸せと無事を願う心を育てる",
     explanation:
       "相手に敵意を向ける代わりに、安らかであってほしいと願う心を育てること。「慈」を日常のことばに近づけると、このように読めます。",
@@ -26,6 +28,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "m14-moha",
+    practiceName: "教えを学び、質問・対話する",
     title: "わからなさを、一人で抱えず学び合う",
     explanation:
       "教えを学ぶ、わからない点を質問する、話を聞く、対話する、師のそばで学ぶ。瞑想一つに絞るのではなく、理解を支える学びの環境が示されています。",
@@ -40,6 +43,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "m14-vitakka",
+    practiceName: "呼吸瞑想（呼吸のマインドフルネス）",
     title: "いま、吸っている息・吐いている息に気づく",
     explanation:
       "呼吸を注意のよりどころにして、吸う息、吐く息を知る修習です。入出息念経には、長い息や短い息を、そのように知ることが記されています。",
@@ -54,6 +58,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "m14-saddha",
+    practiceName: "仏・教え・実践への信頼を育てる振り返り",
     title: "信頼のよりどころを、思い起こす",
     explanation:
       "仏陀の覚り、教えの善さ、僧伽の実践、自分が守っている戒。そのよさに心を向け、信頼を育てる対象として示されています。",
@@ -66,6 +71,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "m14-buddhi",
+    practiceName: "洞察瞑想（ヴィパッサナー）",
     title: "変わること・頼りきれないこと・自分のものと固定できないことを見る",
     explanation:
       "無常・苦・無我という三つのあり方から、経験を観察することです。ここでの「苦」は、痛みだけでなく、変わるものを確かな満足のよりどころにしきれない面も含めた言い換えです。",
@@ -80,16 +86,18 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "v121-0",
+    practiceName: "身体の構成・死後の変化を観察する瞑想",
     title: "身体の構成や変化を、丁寧に見つめる",
     explanation:
       "十不浄は死後の身体のあり方を十の対象として扱い、身至念は身体に注意を向ける修習です。この論書では、身体の部分を観察する説明が中心になります。",
     evidenceLevel: "modernized",
     sourceIds: ["v121-0", "reader-v105", "reader-body"],
     boundary:
-      "一般的なリラックス法への言い換えはしていません。具体的な観想の手順は、ここでは扱いません。",
+      "身体の感覚を順に感じるボディスキャンとは、観察の対象と目的が異なります。具体的な観想の手順は、ここでは扱いません。",
   },
   {
     id: "v121-1",
+    practiceName: "慈悲・喜び・平静を育てる瞑想／色への集中",
     title: "人に向ける心を育てる方法と、色を対象にする方法",
     explanation:
       "四梵住は、幸せを願う「慈」、苦しみに心を寄せる「悲」、他者の喜びを喜ぶ「喜」、偏りに流されない「捨」。四色遍は、青・黄・赤・白を瞑想の対象にする方法です。",
@@ -100,6 +108,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "v121-2",
+    practiceName: "呼吸瞑想（呼吸のマインドフルネス）",
     title: "呼吸を、注意のよりどころにする",
     explanation:
       "吸う息と吐く息に気づきながら、呼吸に注意を向ける修習です。『清浄道論』では、痴行と尋行の両方に対応する対象として挙げています。",
@@ -109,6 +118,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "v121-3",
+    practiceName: "仏・教え・善い実践などを思い起こす瞑想",
     title: "仏・教え・僧伽や、よい実践を思い起こす",
     explanation:
       "仏・法・僧・戒・捨・天の六つを思い起こす修習です。この「捨」は分かち合うこと、布施に関わる語。四梵住の「捨」とは意味が異なります。",
@@ -123,6 +133,7 @@ export const practiceNotes: ReadingNote[] = [
   },
   {
     id: "v121-4",
+    practiceName: "死・涅槃・身体の要素・食を観察する瞑想",
     title: "生命の終わり、静まり、身体、食べ物を見つめる四つの方法",
     explanation:
       "死念は生命に終わりがあること、寂止随念は涅槃の静まりを思い起こすこと。四界分別は身体を地・水・火・風から見分けること、食厭想は食べ物の厭うべき面を観察することです。",

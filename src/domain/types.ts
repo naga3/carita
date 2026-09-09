@@ -39,6 +39,7 @@ export type Answers = Record<string, string>;
 export type ReadingNote = {
   id: string;
   title: string;
+  practiceName?: string;
   explanation: string;
   evidenceLevel: "modernized";
   sourceIds: string[];
